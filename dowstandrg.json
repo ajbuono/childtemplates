@@ -1,0 +1,74 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "storageAccountType": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_GRS",
+        "Standard_ZRS",
+        "Premium_LRS"
+      ],
+      "metadata": {
+        "description": "Storage Account type"
+      }
+    },
+ "networkSecurityGroupName": {
+            "type": "String"
+        },
+
+"subnetId": {
+ "defaultValue": "/subscriptions/5c292113-e6be-485b-a08d-cbc067cbbe7b/resourceGroups/Network-Test-rg/providers/Microsoft.Network/virtualNetworks/MI-Test-Ext1-vnet/subnets/default",
+            "type": "String"
+        },
+        "privateIPAllocationMethod": {
+ "defaultValue": "Dynamic",            
+"type": "String"
+        },
+
+"storageAccountName": {
+      "type": "string"
+    }
+  },
+  "variables": {
+    "availabilitySetName": "AvSet",
+    "storageAccountNameajb": "[parameters('storageAccountName')]"
+  },
+  "resources": [
+{
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Compute/availabilitySets",
+      "name": "[variables('availabilitySetName')]",
+      "location": "[resourceGroup().location]"
+    },
+
+ {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('networkSecurityGroupName')]",
+            "apiVersion": "2015-06-15",
+          "location": "[resourceGroup().location]",
+            "properties": {}
+        },
+
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('storageAccountNameajb')]",
+      "apiVersion": "2016-01-01",
+      "location": "[resourceGroup().location]",
+      "sku": {
+          "name": "[parameters('storageAccountType')]"
+      },
+      "kind": "Storage", 
+      "properties": {
+      }
+    }
+  ],
+  "outputs": {
+      "storageAccountName": {
+          "type": "string",
+          "value": "[variables('storageAccountNameajb')]"
+      }
+  }
+}
